@@ -12,8 +12,8 @@ router.get('/show/:id', postController.getPost);
 router.post('/add', postController.addPost);
 //edit record
 router.put('/edit/:id', postController.editPost);
-//delete record
+//delete record or delete records in batch
 router.delete('/delete/:id', postController.deletePost);
-//delete records in batch
+
 
 module.exports = router;

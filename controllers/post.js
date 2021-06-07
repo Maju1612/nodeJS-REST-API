@@ -8,7 +8,7 @@ exports.getPost = (req, res) => {
             res.send("Falied to query for posts: " + err)
             throw err
         }
-        console.log("Fetched posts succesfully")
+        console.log(`Fetched post with id: ${postId} succesfully`)
         res.json(rows)
     })
 }
@@ -38,40 +38,40 @@ exports.addPost = (req, res) => {
             res.send("Falied to query for posts: " + err)
             throw err
         }
+        console.log(`Add post with id: ${id} succesfully`)
         res.json(rows)
     })
 }
 
 exports.editPost = (req, res) => {
-    const id = req.body.id;
+    const postId = req.params.id
     const title = req.body.title;
     const lead = req.body.lead;
     const content = req.body.content;
 
     const sql = "UPDATE Posts SET title=?, lead=?, content=? WHERE id=?";
 
-    conn.query(sql, [title, lead, content, id], (err, rows, fields) => {
+    conn.query(sql, [title, lead, content, postId], (err, rows, fields) => {
         if (err) {
             res.send("Falied to query for posts: " + err)
             throw err
         }
+        console.log(`Edit post with id: ${postId} succesfully`)
         res.json(rows)
     })
 }
 
-    exports.deletePost = (req, res) => {
-    const id = req.body.id;
-    const title = req.body.title;
-    const lead = req.body.lead;
-    const content = req.body.content;
+exports.deletePost = (req, res) => {
+    const postId = req.params.id
 
-    const sql = "DELETE FROM Posts WHERE id=?";
+    const sql = `DELETE FROM Posts WHERE id IN (${postId})`;
 
-    conn.query(sql, id, (err, rows, fields) => {
+    conn.query(sql, (err, rows, fields) => {
         if (err) {
             res.send("Falied to query for posts: " + err)
             throw err
         }
+        console.log(`Delete post with id: ${postId} succesfully`)
         res.json(rows)
     })
 }
