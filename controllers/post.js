@@ -1,4 +1,5 @@
 const { conn } = require('../db/conn')
+const { uuid } = require('uuidv4');
 
 exports.getPost = (req, res) => {
     const postId = req.params.id
@@ -26,7 +27,7 @@ exports.getAllPosts = (req, res) => {
 }
 
 exports.addPost = (req, res) => {
-    const id = req.body.id;
+    const id = uuid();
     const title = req.body.title;
     const lead = req.body.lead;
     const content = req.body.content;
