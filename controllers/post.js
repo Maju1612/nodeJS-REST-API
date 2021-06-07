@@ -1,5 +1,6 @@
 const { conn } = require('../db/conn')
-const { uuid } = require('uuidv4');
+const uuid = require('uuid');
+const moment = require('moment')
 
 exports.getPost = (req, res) => {
     const postId = req.params.id
@@ -27,14 +28,15 @@ exports.getAllPosts = (req, res) => {
 }
 
 exports.addPost = (req, res) => {
-    const id = uuid();
+    const id = uuid.v4();
     const title = req.body.title;
     const lead = req.body.lead;
     const content = req.body.content;
+    const mysqlTimestamp = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
 
-    const sql = "INSERT INTO Posts (id, title, lead, content) VALUES (?, ?, ?, ?)";
+    const sql = "INSERT INTO Posts (id, title, lead, content, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)";
 
-    conn.query(sql, [id, title, lead, content], (err, rows, fields) => {
+    conn.query(sql, [id, title, lead, content, mysqlTimestamp, mysqlTimestamp], (err, rows, fields) => {
         if (err) {
             res.send("Falied to query for posts: " + err)
             throw err
@@ -49,10 +51,11 @@ exports.editPost = (req, res) => {
     const title = req.body.title;
     const lead = req.body.lead;
     const content = req.body.content;
+    const mysqlTimestamp = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 
-    const sql = "UPDATE Posts SET title=?, lead=?, content=? WHERE id=?";
+    const sql = "UPDATE Posts SET title=?, lead=?, content=?, updatedAt=? WHERE id=?";
 
-    conn.query(sql, [title, lead, content, postId], (err, rows, fields) => {
+    conn.query(sql, [title, lead, content, postId, mysqlTimestamp], (err, rows, fields) => {
         if (err) {
             res.send("Falied to query for posts: " + err)
             throw err
