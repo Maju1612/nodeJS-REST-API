@@ -55,7 +55,7 @@ exports.editPost = (req, res) => {
 
     const sql = "UPDATE Posts SET title=?, lead=?, content=?, updatedAt=? WHERE id=?";
 
-    conn.query(sql, [title, lead, content, postId, mysqlTimestamp], (err, rows, fields) => {
+    conn.query(sql, [title, lead, content, mysqlTimestamp, postId], (err, rows, fields) => {
         if (err) {
             res.send("Falied to query for posts: " + err)
             throw err
