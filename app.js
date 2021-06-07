@@ -1,15 +1,10 @@
 const express = require('express');
 const app = express();
-
-const connection = mysql.createConnection({
-        host:'sql11.freemysqlhosting.net',
-        user:'sql11416779',
-        password:'QE9pMXfqfX',
-        database:'sql11416779'
-    })
+const bodyParser = require('body-parser')
 
 const postRoutes = require('./routes/post')
 
+app.use(bodyParser.json())
 app.use('/', postRoutes)
 
 const port = 3000

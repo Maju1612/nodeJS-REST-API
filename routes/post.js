@@ -5,15 +5,15 @@ const router = express.Router();
 
 
 //show all records
-router.get('/show', postController.getPosts);
+router.get('/show', postController.getAllPosts);
 //show record
-router.get('/show/:id', postController.getPosts);
+router.get('/show/:id', postController.getPost);
 //add record
-router.post('/add', postController.getPosts);
+router.post('/add', postController.addPost);
 //edit record
-router.put('/edit/:id', postController.getPosts);
+router.put('/edit/:id', postController.editPost);
 //delete record
-router.delete('/delete/:id', postController.getPosts);
+router.delete('/delete/:id', postController.deletePost);
 //delete records in batch
 
 module.exports = router;
