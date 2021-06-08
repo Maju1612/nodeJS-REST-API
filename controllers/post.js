@@ -1,4 +1,4 @@
-const { conn, knex } = require('../db/conn')
+const { knex } = require('../db/conn')
 const uuid = require('uuid');
 const moment = require('moment')
 
