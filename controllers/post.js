@@ -1,83 +1,109 @@
-const { conn } = require('../db/conn')
+const { conn, knex } = require('../db/conn')
 const uuid = require('uuid');
 const moment = require('moment')
 
-exports.getPost = (req, res) => {
+exports.getPost = async (req, res) => {
     const postId = req.params.id
-    const sql = "SELECT * FROM Posts WHERE id = ?"
-    conn.query(sql, postId, (err, rows, fields) => {
-        if (err) {
-            res.send("Falied to query for posts: " + err)
-            throw err
-        }
-        console.log(`Fetched post with id: ${postId} succesfully`)
-        res.json(rows)
-    })
+    try {
+        const result = await knex('Posts')
+        .where('id', postId)
+        res.json({
+            Post: result
+        });
+    } catch (err) {
+        console.error('Database error:', err);
+        res.send(err.sqlMessage);
+    }
 }
 
-exports.getAllPosts = (req, res) => {
-    const sql = "SELECT * FROM Posts"
-    conn.query(sql, (err, rows, fields) => {
-        if (err) {
-            res.send("Falied to query for posts: " + err)
-            throw err
-        }
-        console.log("Fetched posts succesfully")
-        res.json(rows)
-    })
+exports.getAllPosts = async (req, res) => {
+    try {
+        const result = await knex('Posts')
+        res.json({
+            Posts: result
+        });
+    } catch (err) {
+        console.error('Database error:', err);
+        res.send(err.sqlMessage);
+    }
 }
 
-exports.addPost = (req, res) => {
+exports.addPost = async (req, res) => {
     const id = uuid.v4();
     const title = req.body.title;
     const lead = req.body.lead;
     const content = req.body.content;
     const mysqlTimestamp = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
-
-    const sql = "INSERT INTO Posts (id, title, lead, content, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)";
-
-    conn.query(sql, [id, title, lead, content, mysqlTimestamp, mysqlTimestamp], (err, rows, fields) => {
-        if (err) {
-            res.send("Falied to query for posts: " + err)
-            throw err
-        }
-        console.log(`Add post with id: ${id} succesfully`)
-        res.json(rows)
-    })
+    
+    try {
+        await knex('Posts')
+            .insert({
+                id,
+                title,
+                lead,
+                content,
+                createdAt: mysqlTimestamp,
+                updatedAt: mysqlTimestamp
+            });
+        console.log(`Add post with id ${id}`)
+        res.sendStatus(status)
+    } catch (err) {
+        console.error('Database error:', err);
+        res.send(err.sqlMessage);
+    }
 }
 
-exports.editPost = (req, res) => {
-    const postId = req.params.id
+exports.editPost = async (req, res) => {
+    const id = req.params.id
     const title = req.body.title;
     const lead = req.body.lead;
     const content = req.body.content;
-    const mysqlTimestamp = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+    const updatedAt = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 
-    const sql = "UPDATE Posts SET title=?, lead=?, content=?, updatedAt=? WHERE id=?";
-
-    conn.query(sql, [title, lead, content, mysqlTimestamp, postId], (err, rows, fields) => {
-        if (err) {
-            res.send("Falied to query for posts: " + err)
-            throw err
-        }
-        console.log(`Edit post with id: ${postId} succesfully`)
-        res.json(rows)
-    })
+    try {
+        await knex('Posts')
+            .where({id})
+            .update({
+                title,
+                lead,
+                content,
+                updatedAt
+            });
+        console.log(`Update post with id ${id}`)
+        res.sendStatus(status)
+    } catch (err) {
+        console.error('Database error:', err);
+        res.send(err.sqlMessage);
+    }
 }
 
-exports.deletePost = (req, res) => {
-    let postId = req.params.id
-    postId = postId.split(',')
-    postId.forEach(el => console.log(`'${el}',`))
+exports.deletePost = async (req, res) => {
+    let id = req.params.id
 
-    const sql = "DELETE FROM Posts WHERE id IN ("+queryArray.join(',')+")"
+    try {
+        await knex('Posts')
+            .where({id})
+            .del()
+        console.log(`Delete post with id ${id}`)
+        res.send(`Delete post with id ${id}`)
+    } catch (err) {
+        console.error('Database error:', err);
+        res.send(err.sqlMessage);
+    }
+}
 
-    conn.query(sql,[postId], (err, rows, fields) => {
-        if (err) {
-            res.send("Falied to query for posts: " + err)
-            throw err
-        }
-        console.log(`Delete post with id: ${postId} succesfully`)
-        res.json(rows)
-    })
+exports.deletePosts = async (req, res) => {
+    let id = req.body.id
+
+    try {
+        await knex('Posts')
+            .whereIn('id', id)
+            .del()
+        console.log(`Delete posts with id ${id.join(', ')}`)
+        res.send(`Delete posts with id ${id.join(', ')}`)
+    } catch (err) {
+        console.error('Database error:', err);
+        res.send(err.sqlMessage);
+    }
+
 }
