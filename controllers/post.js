@@ -66,11 +66,13 @@ exports.editPost = (req, res) => {
 }
 
 exports.deletePost = (req, res) => {
-    const postId = req.params.id
+    let postId = req.params.id
+    postId = postId.split(',')
+    postId.forEach(el => console.log(`'${el}',`))
 
-    const sql = `DELETE FROM Posts WHERE id IN (${postId})`;
+    const sql = "DELETE FROM Posts WHERE id IN ("+queryArray.join(',')+")"
 
-    conn.query(sql, (err, rows, fields) => {
+    conn.query(sql,[postId], (err, rows, fields) => {
         if (err) {
             res.send("Falied to query for posts: " + err)
             throw err
