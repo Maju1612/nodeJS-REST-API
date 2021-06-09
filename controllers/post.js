@@ -46,7 +46,7 @@ exports.addPost = async (req, res) => {
                 updatedAt: mysqlTimestamp
             });
         console.log(`Add post with id ${id}`)
-        res.sendStatus(status)
+        res.send(`Add post with id ${id}`)
     } catch (err) {
         console.error('Database error:', err);
         res.send(err.sqlMessage);
@@ -70,7 +70,7 @@ exports.editPost = async (req, res) => {
                 updatedAt
             });
         console.log(`Update post with id ${id}`)
-        res.sendStatus(status)
+        res.send(`Update post with id ${id}`)
     } catch (err) {
         console.error('Database error:', err);
         res.send(err.sqlMessage);

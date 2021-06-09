@@ -3,7 +3,6 @@ const postController = require('../controllers/post');
 
 const router = express.Router();
 
-
 //show all records
 router.get('/show', postController.getAllPosts);
 //show record
@@ -16,6 +15,5 @@ router.put('/edit/:id', postController.editPost);
 router.delete('/delete/:id', postController.deletePost);
 //delete records in batch
 router.delete('/delete', postController.deletePosts);
-
 
 module.exports = router;
