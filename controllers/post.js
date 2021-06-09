@@ -2,11 +2,13 @@ const { knex } = require('../db/conn')
 const uuid = require('uuid');
 const moment = require('moment')
 
+const postService = require('../services/post')
+
 exports.getPost = async (req, res) => {
     const postId = req.params.id
+
     try {
-        const result = await knex('Posts')
-        .where('id', postId)
+        const result = await postService.getPost(postId)
         res.json({
             Post: result
         });
@@ -18,7 +20,7 @@ exports.getPost = async (req, res) => {
 
 exports.getAllPosts = async (req, res) => {
     try {
-        const result = await knex('Posts')
+        const result = await postService.getAllPosts()
         res.json({
             Posts: result
         });
@@ -33,18 +35,17 @@ exports.addPost = async (req, res) => {
     const title = req.body.title;
     const lead = req.body.lead;
     const content = req.body.content;
-    const mysqlTimestamp = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
     
+    const newPost = {
+        id,
+        title,
+        lead,
+        content
+    }
+
     try {
-        await knex('Posts')
-            .insert({
-                id,
-                title,
-                lead,
-                content,
-                createdAt: mysqlTimestamp,
-                updatedAt: mysqlTimestamp
-            });
+        await postService.addPost(newPost)
+
         console.log(`Add post with id ${id}`)
         res.send(`Add post with id ${id}`)
     } catch (err) {
@@ -58,17 +59,16 @@ exports.editPost = async (req, res) => {
     const title = req.body.title;
     const lead = req.body.lead;
     const content = req.body.content;
-    const updatedAt = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+
+    const editedPost = {
+        title,
+        lead,
+        content
+    }
 
     try {
-        await knex('Posts')
-            .where({id})
-            .update({
-                title,
-                lead,
-                content,
-                updatedAt
-            });
+        await postService.editPost(id, editedPost)
+
         console.log(`Update post with id ${id}`)
         res.send(`Update post with id ${id}`)
     } catch (err) {
@@ -78,12 +78,11 @@ exports.editPost = async (req, res) => {
 }
 
 exports.deletePost = async (req, res) => {
-    let id = req.params.id
+    const id = req.params.id
 
     try {
-        await knex('Posts')
-            .where({id})
-            .del()
+        await postService.deletePost(id)
+
         console.log(`Delete post with id ${id}`)
         res.send(`Delete post with id ${id}`)
     } catch (err) {
@@ -93,12 +92,11 @@ exports.deletePost = async (req, res) => {
 }
 
 exports.deletePosts = async (req, res) => {
-    let id = req.body.id
+    const id = req.body.id
 
     try {
-        await knex('Posts')
-            .whereIn('id', id)
-            .del()
+        await postService.deletePosts(id)
+
         console.log(`Delete posts with id ${id.join(', ')}`)
         res.send(`Delete posts with id ${id.join(', ')}`)
     } catch (err) {
