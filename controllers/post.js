@@ -93,8 +93,7 @@ exports.deletePosts = async (req, res) => {
 
     try {
         const result = await postService.deletePosts(postsId, userId)
-
-        res.send(result ? `Delete posts with id ${postId}`:"You can't delete these posts")
+        res.send(result ? `Delete ${result} posts`:"You can't delete these posts")
     } catch (err) {
         console.error('Database error:', err);
         res.send(err.sqlMessage);
