@@ -1,24 +1,35 @@
 const { knex } = require('../db/conn')
+const jwt = require('jsonwebtoken');
 const uuid = require('uuid');
 const moment = require('moment')
 
+const userService = require('../services/user')
+
+exports.loginUser = async (req, res) => {
+    const user = await knex('Users').where('email', req.body.email).first()
+
+    if (!user || req.body.password !== user.password) {
+        res.send('Username or password incorrect')
+        return
+    }
+    const token = jwt.sign({'ID':user.ID}, process.env.TOKEN_SECRET, { expiresIn: '7d' });
+    res.send(token)
+}
+
 exports.addUser = async (req, res) => {
-    const id = uuid.v4();
     const email = req.body.email;
     const password = req.body.password;
-    const mysqlTimestamp = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+
+    const newUser = {
+        email,
+        password,
+    }
     
     try {
-        await knex('Users')
-            .insert({
-                id,
-                email,
-                password,
-                createdAt: mysqlTimestamp,
-                updatedAt: mysqlTimestamp
-            });
-        console.log(`Add user with id ${id}`)
-        res.send(`Add user with id ${id}`)
+        await userService.addUser(newUser)
+        
+        console.log(`Add user`)
+        res.send(`Add user`)
     } catch (err) {
         console.error('Database error:', err);
         res.send(err.sqlMessage);
@@ -26,19 +37,18 @@ exports.addUser = async (req, res) => {
 }
 
 exports.editUser = async (req, res) => {
-    const id = req.params.id
+    const id = req.body.id
     const email = req.body.email;
     const password = req.body.password;
-    const updatedAt = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+    
+    const editedUser = {
+        email,
+        password,
+    }
 
     try {
-        await knex('Posts')
-            .where({id})
-            .update({
-                email,
-                password,
-                updatedAt
-            });
+        await userService.editUser(id, editedUser)
+
         console.log(`Update user with id ${id}`)
         res.send(`Update user with id ${id}`)
     } catch (err) {
@@ -48,12 +58,11 @@ exports.editUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
-    let id = req.params.id
+    const id = req.body.id
 
     try {
-        await knex('Posts')
-            .where({id})
-            .del()
+        await userService.deleteUser(id)
+
         console.log(`Delete user with id ${id}`)
         res.send(`Delete user with id ${id}`)
     } catch (err) {

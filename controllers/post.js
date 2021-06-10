@@ -1,7 +1,3 @@
-const { knex } = require('../db/conn')
-const uuid = require('uuid');
-const moment = require('moment')
-
 const postService = require('../services/post')
 
 exports.getPost = async (req, res) => {
@@ -31,13 +27,11 @@ exports.getAllPosts = async (req, res) => {
 }
 
 exports.addPost = async (req, res) => {
-    const id = uuid.v4();
     const title = req.body.title;
     const lead = req.body.lead;
     const content = req.body.content;
     
     const newPost = {
-        id,
         title,
         lead,
         content
@@ -46,8 +40,8 @@ exports.addPost = async (req, res) => {
     try {
         await postService.addPost(newPost)
 
-        console.log(`Add post with id ${id}`)
-        res.send(`Add post with id ${id}`)
+        console.log(`Add post`)
+        res.send(`Add post`)
     } catch (err) {
         console.error('Database error:', err);
         res.send(err.sqlMessage);

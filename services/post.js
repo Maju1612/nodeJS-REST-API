@@ -1,4 +1,3 @@
-const { knex } = require('../db/conn')
 const uuid = require('uuid');
 const moment = require('moment')
 
@@ -16,6 +15,8 @@ exports.addPost = async newPost => {
     const mysqlTimestamp = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
     newPost.createdAt = mysqlTimestamp
     newPost.updatedAt = mysqlTimestamp
+    newPost.id = uuid.v4();
+
     return await postRes.addPost(newPost)
 }
 

@@ -1,6 +1,4 @@
 const { knex } = require('../db/conn')
-const uuid = require('uuid');
-const moment = require('moment')
 
 exports.getPost = async postId => {
     return await knex('Posts')
