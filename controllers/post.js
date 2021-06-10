@@ -27,11 +27,13 @@ exports.getAllPosts = async (req, res) => {
 }
 
 exports.addPost = async (req, res) => {
+    const author = req.body.userId
     const title = req.body.title;
     const lead = req.body.lead;
     const content = req.body.content;
     
     const newPost = {
+        author,
         title,
         lead,
         content
@@ -49,7 +51,8 @@ exports.addPost = async (req, res) => {
 }
 
 exports.editPost = async (req, res) => {
-    const id = req.params.id
+    const userId = req.body.userId
+    const postId = req.params.id
     const title = req.body.title;
     const lead = req.body.lead;
     const content = req.body.content;
@@ -61,10 +64,9 @@ exports.editPost = async (req, res) => {
     }
 
     try {
-        await postService.editPost(id, editedPost)
+        const result = await postService.editPost(postId, userId, editedPost)
 
-        console.log(`Update post with id ${id}`)
-        res.send(`Update post with id ${id}`)
+        res.send(result ? `Update post with id ${postId}`:"You can't edit this post")
     } catch (err) {
         console.error('Database error:', err);
         res.send(err.sqlMessage);
@@ -72,13 +74,13 @@ exports.editPost = async (req, res) => {
 }
 
 exports.deletePost = async (req, res) => {
-    const id = req.params.id
+    const postId = req.params.id
+    const userId = req.body.userId
 
     try {
-        await postService.deletePost(id)
+        const result = await postService.deletePost(postId, userId)
 
-        console.log(`Delete post with id ${id}`)
-        res.send(`Delete post with id ${id}`)
+        res.send(result ? `Delete post with id ${postId}`:"You can't delete this post")
     } catch (err) {
         console.error('Database error:', err);
         res.send(err.sqlMessage);
@@ -86,13 +88,13 @@ exports.deletePost = async (req, res) => {
 }
 
 exports.deletePosts = async (req, res) => {
-    const id = req.body.id
+    const postsId = req.body.id
+    const userId = req.body.userId
 
     try {
-        await postService.deletePosts(id)
+        const result = await postService.deletePosts(postsId, userId)
 
-        console.log(`Delete posts with id ${id.join(', ')}`)
-        res.send(`Delete posts with id ${id.join(', ')}`)
+        res.send(result ? `Delete posts with id ${postId}`:"You can't delete these posts")
     } catch (err) {
         console.error('Database error:', err);
         res.send(err.sqlMessage);

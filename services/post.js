@@ -20,16 +20,16 @@ exports.addPost = async newPost => {
     return await postRes.addPost(newPost)
 }
 
-exports.editPost = async (id, editedPost) => {
+exports.editPost = async (postId, userId, editedPost) => {
     editedPost.updatedAt = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 
-    return await postRes.editPost(id, editedPost)
+    return await postRes.editPost(postId, userId, editedPost)
 }
 
-exports.deletePost = async id => {
-   return await postRes.deletePost(id)
+exports.deletePost = async (postId, userId) => {
+   return await postRes.deletePost(postId, userId)
 }
 
-exports.deletePosts = async id => {
-    return await postRes.deletePosts(id)
+exports.deletePosts = async (postId, userId) => {
+    return await postRes.deletePosts(postId, userId)
 }

@@ -14,20 +14,43 @@ exports.addPost = async newPost => {
         .insert(newPost);
 }
 
-exports.editPost = async (id, editedPost) => {
+exports.editPost = async (postId, userId, editedPost) => {
+    const post = await knex('Posts')
+        .where('id', postId)
+        .first()
+    
+    if(userId !== post.author) return false
+
     return await knex('Posts')
-        .where({id})
+        .where('id', postId)
         .update(editedPost);  
 }
 
-exports.deletePost = async id => {
+exports.deletePost = async (postId, userId) => {
+    const post = await knex('Posts')
+        .where('id', postId)
+        .first()
+    
+    if(userId !== post.author) return false
+    
     return await knex('Posts')
-        .where({id})
+        .where('id', postId)
         .del()
 }
 
-exports.deletePosts = async id => {
+exports.deletePosts = async (postsId, userId) => {
+    const posts = await knex('Posts')
+        .whereIn('id', postsId)
+    
+    const checkedPosts = posts.filter(post => {
+        if (userId === post.author)
+            return post
+        
+    })
+
+    if(checkedPosts.length !== posts.length) return false
+    
     return await knex('Posts')
-        .whereIn('id', id)
+        .whereIn('id', postsId)
         .del()
 }

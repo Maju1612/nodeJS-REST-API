@@ -5,8 +5,8 @@ const {authToken} = require('../services/jwt')
 
 const router = express.Router();
 
+//login user
 router.get('/login', userController.loginUser);
-
 //add user
 router.post('/add', userController.addUser);
 //edit user

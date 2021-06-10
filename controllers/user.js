@@ -12,7 +12,7 @@ exports.loginUser = async (req, res) => {
         res.send('Username or password incorrect')
         return
     }
-    const token = jwt.sign({'ID':user.ID}, process.env.TOKEN_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({'id':user.id}, process.env.TOKEN_SECRET, { expiresIn: '7d' });
     res.send(token)
 }
 
@@ -37,7 +37,7 @@ exports.addUser = async (req, res) => {
 }
 
 exports.editUser = async (req, res) => {
-    const id = req.body.id
+    const id = req.body.userId
     const email = req.body.email;
     const password = req.body.password;
     
@@ -58,7 +58,7 @@ exports.editUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
-    const id = req.body.id
+    const id = req.body.userId
 
     try {
         await userService.deleteUser(id)

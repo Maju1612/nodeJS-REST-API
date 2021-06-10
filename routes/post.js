@@ -5,9 +5,9 @@ const { authToken } = require('../services/jwt')
 const router = express.Router();
 
 //show all records
-router.get('/show', authToken, postController.getAllPosts);
+router.get('/show', postController.getAllPosts);
 //show record
-router.get('/show/:id', authToken, postController.getPost);
+router.get('/show/:id', postController.getPost);
 //add record
 router.post('/add', authToken, postController.addPost);
 //edit record
