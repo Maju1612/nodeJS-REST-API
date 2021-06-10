@@ -9,14 +9,6 @@ exports.loginUser = async (req, res) => {
     const result = await createToken(email, password)
 
     res.send(result)
-    // const user = await knex('Users').where('email', req.body.email).first()
-
-    // if (!user || req.body.password !== user.password) {
-    //     res.send('Username or password incorrect')
-    //     return
-    // }
-    // const token = jwt.sign({'id':user.id}, process.env.TOKEN_SECRET, { expiresIn: '7d' });
-    // res.send(token)
 }
 
 exports.addUser = async (req, res) => {

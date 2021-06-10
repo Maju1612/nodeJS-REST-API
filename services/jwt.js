@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const { knex } = require('../db/conn')
 const jwtRes = require('../repositories/jwt')
 
 exports.createToken = async (email, password) => {
