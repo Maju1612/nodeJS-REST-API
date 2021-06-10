@@ -1,19 +1,22 @@
-const { knex } = require('../db/conn')
-const jwt = require('jsonwebtoken');
-const uuid = require('uuid');
-const moment = require('moment')
-
 const userService = require('../services/user')
+const { createToken } = require('../services/jwt')
 
 exports.loginUser = async (req, res) => {
-    const user = await knex('Users').where('email', req.body.email).first()
 
-    if (!user || req.body.password !== user.password) {
-        res.send('Username or password incorrect')
-        return
-    }
-    const token = jwt.sign({'id':user.id}, process.env.TOKEN_SECRET, { expiresIn: '7d' });
-    res.send(token)
+    const email = req.body.email
+    const password = req.body.password
+
+    const result = await createToken(email, password)
+
+    res.send(result)
+    // const user = await knex('Users').where('email', req.body.email).first()
+
+    // if (!user || req.body.password !== user.password) {
+    //     res.send('Username or password incorrect')
+    //     return
+    // }
+    // const token = jwt.sign({'id':user.id}, process.env.TOKEN_SECRET, { expiresIn: '7d' });
+    // res.send(token)
 }
 
 exports.addUser = async (req, res) => {
