@@ -1,5 +1,6 @@
 const userService = require('../services/user')
 const { createToken } = require('../services/jwt')
+const { validationResult } = require('express-validator');
 
 exports.loginUser = async (req, res) => {
     const email = req.body.email
@@ -7,10 +8,15 @@ exports.loginUser = async (req, res) => {
 
     const result = await createToken(email, password)
 
-    res.send(result)
+    res.json(result)
 }
 
 exports.addUser = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const email = req.body.email;
     const password = req.body.password;
 
@@ -22,32 +28,31 @@ exports.addUser = async (req, res) => {
     try {
         await userService.addUser(newUser)
         
-        console.log(`Add user`)
-        res.send(`Add user`)
+        res.json({success: true })
     } catch (err) {
-        console.error('Database error:', err);
-        res.send(err.sqlMessage);
+        res.json({success: false, message:err.sqlMessage })
     }
 }
 
 exports.editUser = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    
     const id = req.body.userId
-    const email = req.body.email;
     const password = req.body.password;
     
     const editedUser = {
-        email,
         password,
     }
 
     try {
         await userService.editUser(id, editedUser)
 
-        console.log(`Update user with id ${id}`)
-        res.send(`Update user with id ${id}`)
+        res.json({success: true })
     } catch (err) {
-        console.error('Database error:', err);
-        res.send(err.sqlMessage);
+        res.json({success: false, message:err.sqlMessage })
     }
 }
 
@@ -57,10 +62,8 @@ exports.deleteUser = async (req, res) => {
     try {
         await userService.deleteUser(id)
 
-        console.log(`Delete user with id ${id}`)
-        res.send(`Delete user with id ${id}`)
+        res.json({success: true })
     } catch (err) {
-        console.error('Database error:', err);
-        res.send(err.sqlMessage);
+        res.json({success: false, message:err.sqlMessage })
     }
 }

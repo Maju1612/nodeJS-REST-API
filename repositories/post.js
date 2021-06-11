@@ -3,6 +3,7 @@ const { knex } = require('../db/conn')
 exports.getPost = async postId => {
     return await knex('Posts')
         .where('id', postId)
+        .first()
 }
 
 exports.getAllPosts = async () => {
@@ -10,32 +11,35 @@ exports.getAllPosts = async () => {
 }
 
 exports.addPost = async newPost => {
-    return await knex('Posts')
+    await knex('Posts')
         .insert(newPost);
+    return {success: true }
 }
 
 exports.editPost = async (postId, userId, editedPost) => {
-    const post = await knex('Posts')
+    const author = await knex('Posts')
         .where('id', postId)
-        .first()
+        .first('author')
     
-    if(userId !== post.author) return false
+    if(userId !== author) return {success: false }
 
-    return await knex('Posts')
+    await knex('Posts')
         .where('id', postId)
-        .update(editedPost);  
+        .update(editedPost);
+    return {success: true }
 }
 
 exports.deletePost = async (postId, userId) => {
-    const post = await knex('Posts')
+    const author = await knex('Posts')
         .where('id', postId)
-        .first()
+        .first('author')
     
-    if(userId !== post.author) return false
+    if(userId !== author) return {success: false }
     
-    return await knex('Posts')
+    await knex('Posts')
         .where('id', postId)
         .del()
+    return {success: true }
 }
 
 exports.deletePosts = async (postsId, userId) => {
@@ -48,9 +52,10 @@ exports.deletePosts = async (postsId, userId) => {
         
     })
 
-    if(checkedPosts.length !== posts.length) return false
+    if(checkedPosts.length !== posts.length) return {success: false }
     
-    return await knex('Posts')
+    await knex('Posts')
         .whereIn('id', postsId)
         .del()
+    return {success: true }
 }

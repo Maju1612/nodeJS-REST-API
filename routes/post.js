@@ -2,6 +2,7 @@ const express = require('express');
 const postController = require('../controllers/post');
 const { authToken } = require('../middleware/auth')
 
+
 const router = express.Router();
 
 //show all records

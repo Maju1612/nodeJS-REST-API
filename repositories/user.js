@@ -16,3 +16,11 @@ exports.deleteUser = async id => {
         .where({id})
         .del()
 }
+
+exports.getUserId = async (email, password) => {
+    const userId = await knex('Users')
+        .where({email, password})
+        .first('id')
+        
+    return userId
+}

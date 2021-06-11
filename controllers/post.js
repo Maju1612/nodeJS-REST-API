@@ -5,24 +5,18 @@ exports.getPost = async (req, res) => {
 
     try {
         const result = await postService.getPost(postId)
-        res.json({
-            Post: result
-        });
+        res.json(result);
     } catch (err) {
-        console.error('Database error:', err);
-        res.send(err.sqlMessage);
+        res.json({success: false, message:err.sqlMessage })
     }
 }
 
 exports.getAllPosts = async (req, res) => {
     try {
         const result = await postService.getAllPosts()
-        res.json({
-            Posts: result
-        });
+        res.json(result);
     } catch (err) {
-        console.error('Database error:', err);
-        res.send(err.sqlMessage);
+        res.json({success: false, message:err.sqlMessage })
     }
 }
 
@@ -40,13 +34,11 @@ exports.addPost = async (req, res) => {
     }
 
     try {
-        await postService.addPost(newPost)
+        const result = await postService.addPost(newPost)
 
-        console.log(`Add post`)
-        res.send(`Add post`)
+        res.json(result)
     } catch (err) {
-        console.error('Database error:', err);
-        res.send(err.sqlMessage);
+        res.json({success: false, message:err.sqlMessage })
     }
 }
 
@@ -66,10 +58,9 @@ exports.editPost = async (req, res) => {
     try {
         const result = await postService.editPost(postId, userId, editedPost)
 
-        res.send(result ? `Update post with id ${postId}`:"You can't edit this post")
+        res.json(result)
     } catch (err) {
-        console.error('Database error:', err);
-        res.send(err.sqlMessage);
+        res.json({success: false, message:err.sqlMessage })
     }
 }
 
@@ -80,10 +71,9 @@ exports.deletePost = async (req, res) => {
     try {
         const result = await postService.deletePost(postId, userId)
 
-        res.send(result ? `Delete post with id ${postId}`:"You can't delete this post")
+        res.json(result)
     } catch (err) {
-        console.error('Database error:', err);
-        res.send(err.sqlMessage);
+        res.json({success: false, message:err.sqlMessage })
     }
 }
 
@@ -93,10 +83,9 @@ exports.deletePosts = async (req, res) => {
 
     try {
         const result = await postService.deletePosts(postsId, userId)
-        res.send(result ? `Delete ${result} posts`:"You can't delete these posts")
+        res.json(result)
     } catch (err) {
-        console.error('Database error:', err);
-        res.send(err.sqlMessage);
+        res.json({success: false, message:err.sqlMessage })
     }
 
 }
