@@ -17,29 +17,18 @@ exports.addPost = async newPost => {
 }
 
 exports.editPost = async (postId, userId, editedPost) => {
-    const author = await knex('Posts')
-        .where('id', postId)
+    const result = await knex('Posts')
+        .where({'id': postId, 'author':userId})
         .first('author')
-    
-    if(userId !== author) return {success: false }
-
-    await knex('Posts')
-        .where('id', postId)
         .update(editedPost);
-    return {success: true }
+    return result > 0 ? {success: true } : {success: false }
 }
 
 exports.deletePost = async (postId, userId) => {
-    const author = await knex('Posts')
-        .where('id', postId)
-        .first('author')
-    
-    if(userId !== author) return {success: false }
-    
-    await knex('Posts')
-        .where('id', postId)
+    const result = await knex('Posts')
+        .where({'id': postId, 'author':userId})
         .del()
-    return {success: true }
+    return result > 0 ? {success: true } : {success: false }
 }
 
 exports.deletePosts = async (postsId, userId) => {
