@@ -22,5 +22,5 @@ exports.getUserId = async (email, password) => {
         .where({email, password})
         .first('id')
         
-    return userId
+    return userId.id
 }

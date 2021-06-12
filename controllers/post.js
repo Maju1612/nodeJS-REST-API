@@ -25,7 +25,7 @@ exports.addPost = async (req, res) => {
     const title = req.body.title;
     const lead = req.body.lead;
     const content = req.body.content;
-    
+
     const newPost = {
         author,
         title,

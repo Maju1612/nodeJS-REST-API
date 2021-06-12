@@ -34,14 +34,9 @@ exports.deletePost = async (postId, userId) => {
 exports.deletePosts = async (postsId, userId) => {
     const posts = await knex('Posts')
         .whereIn('id', postsId)
-    
-    const checkedPosts = posts.filter(post => {
-        if (userId === post.author)
-            return post
-        
-    })
+        .andWhere('author', userId)
 
-    if(checkedPosts.length !== posts.length) return {success: false }
+    if(postsId.length !== posts.length) return {success: false }
     
     await knex('Posts')
         .whereIn('id', postsId)
