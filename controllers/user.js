@@ -30,7 +30,7 @@ exports.addUser = async (req, res) => {
         
         res.json({success: true })
     } catch (err) {
-        res.json({success: false, message:err.sqlMessage })
+        res.json({success: false})
     }
 }
 
@@ -52,7 +52,7 @@ exports.editUser = async (req, res) => {
 
         res.json({success: true })
     } catch (err) {
-        res.json({success: false, message:err.sqlMessage })
+        res.json({success: false})
     }
 }
 
@@ -64,6 +64,6 @@ exports.deleteUser = async (req, res) => {
 
         res.json({success: true })
     } catch (err) {
-        res.json({success: false, message:err.sqlMessage })
+        res.json({success: false})
     }
 }

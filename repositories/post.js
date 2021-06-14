@@ -19,7 +19,6 @@ exports.addPost = async newPost => {
 exports.editPost = async (postId, userId, editedPost) => {
     const result = await knex('Posts')
         .where({'id': postId, 'author':userId})
-        .first('author')
         .update(editedPost);
     return result > 0 ? {success: true } : {success: false }
 }

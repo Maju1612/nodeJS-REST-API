@@ -7,7 +7,7 @@ exports.getPost = async (req, res) => {
         const result = await postService.getPost(postId)
         res.json(result);
     } catch (err) {
-        res.json({success: false, message:err.sqlMessage })
+        res.json({success: false})
     }
 }
 
@@ -16,7 +16,7 @@ exports.getAllPosts = async (req, res) => {
         const result = await postService.getAllPosts()
         res.json(result);
     } catch (err) {
-        res.json({success: false, message:err.sqlMessage })
+        res.json({success: false})
     }
 }
 
@@ -38,7 +38,7 @@ exports.addPost = async (req, res) => {
 
         res.json(result)
     } catch (err) {
-        res.json({success: false, message:err.sqlMessage })
+        res.json({success: false})
     }
 }
 
@@ -60,7 +60,7 @@ exports.editPost = async (req, res) => {
 
         res.json(result)
     } catch (err) {
-        res.json({success: false, message:err.sqlMessage })
+        res.json({success: false})
     }
 }
 
@@ -73,7 +73,7 @@ exports.deletePost = async (req, res) => {
 
         res.json(result)
     } catch (err) {
-        res.json({success: false, message:err.sqlMessage })
+        res.json({success: false})
     }
 }
 
@@ -85,7 +85,7 @@ exports.deletePosts = async (req, res) => {
         const result = await postService.deletePosts(postsId, userId)
         res.json(result)
     } catch (err) {
-        res.json({success: false, message:err.sqlMessage })
+        res.json({success: false})
     }
 
 }
